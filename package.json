@@ -1,0 +1,14 @@
+{
+    "name": "Showroom",
+    "version": "0.1.0",
+    "dependencies": {
+        "body-parser": "~1.10.1",
+        "cookie-session": "~1.1.0",
+        "ejs": "~2.1.4",
+        "ent": "^2.2.0",
+        "express": "^4.11.2",
+        "socket.io": "^2.1.1"
+    },
+    "author": "alkeryn <alkeryndev@gmail.com>",
+    "description": "A docker web UI and management system"
+}
