@@ -25,14 +25,6 @@ p {
         padding: 1em;
 }
 
-
-
-
-
-
-
-
-
 header {
 }
 header ul {
@@ -59,4 +51,7 @@ header li a {
 
 header li a:hover {
         background-color: #111;
+}
+header .active {
+    background-color: rgb(255,115,0);
 }
