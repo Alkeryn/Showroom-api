@@ -5,6 +5,7 @@ To launch the software run :
 npm install
 npm start
 ```
+And go to `localhost:8080` in your web browser
 You can test the rest start / stop api this way
 
 ```
