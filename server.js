@@ -10,14 +10,16 @@ var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 
-docker.list(console.log,'id','names','ports');
+docker.list(console.log,'id','names','ports','state');
+// docker.list(console.log,'*');
 
 io.sockets.on('connection', function (socket) {
         socket.emit('message', 'Sucessfully connected');
         });
 app.set('views', __dirname+'/html/');
-app.set(bodyParser.json());
 app.use(express.static(__dirname+'/public/'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({secret: 'Scrt'}))
 
         .use(function(req, res, next){
@@ -33,15 +35,14 @@ app.use(session({secret: 'Scrt'}))
 			res.send(call)},'*');
         })
         .post('/main/start', function(req, res) {
-
-		docker.list(function(call){
-			res.send(call)},'*');
+		console.log(req.body.id);
+	        docker.start(req.body.id)
+	        res.send('container started')
         })
         .post('/main/stop', function(req, res) {
-
-		console.log(req.body);
-		docker.list(function(call){
-			res.send(call)},'id');
+		console.log(req.body.id);
+	        docker.stop(req.body.id)
+	        res.send('container stoped')
         })
 
         .use(function(req, res, next){
