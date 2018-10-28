@@ -11,8 +11,8 @@ var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 
-docker.list(console.log,'id','names','ports','state');
-// docker.list(console.log,'*');
+// docker.list(console.log,'id','names','ports','state');
+docker.list(console.log,'*');
 
 io.sockets.on('connection', function (socket) {
         socket.emit('message', 'Sucessfully connected');
