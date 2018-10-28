@@ -7,8 +7,8 @@ var app = express(),
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
+retour = docker.listlog('names','id','image');
 
-docker.run("debian:latest");
 
 io.sockets.on('connection', function (socket) {
         socket.emit('message', 'Sucessfully connected');
