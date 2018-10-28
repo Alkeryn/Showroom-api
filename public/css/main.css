@@ -30,8 +30,15 @@ table {
     border-collapse: collapse;
     width: 100%;
 }
+table .ports{
+max-width: 8em;
+overflow-x: scroll;
+overflow-y: hidden;
+font-size: 0.6em;
+}
 th, td {
-    text-align: left;
+    text-align: center;
+    white-space: nowrap;
     padding: 8px;
 }
 

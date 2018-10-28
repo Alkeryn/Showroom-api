@@ -75,7 +75,7 @@ module.exports = {
 		    case "ports":
                         retour.ports = [];
 			for(x in containers) {
-			    retour.ports.push(containers[x].Ports);
+			    retour.ports.push(containers[x].Ports[0]);
 			}
 			break
 		    case "labels":
@@ -137,7 +137,7 @@ module.exports = {
 			    retour.imageid.push(containers[x].ImageID);
 			    retour.command.push(containers[x].Command);
 			    retour.created.push(containers[x].Created);
-			    retour.ports.push(containers[x].Ports);
+			    retour.ports.push(containers[x].Ports[0]);
 			    retour.labels.push(containers[x].Labels);
 			    retour.state.push(containers[x].State);
 			    retour.status.push(containers[x].Status);

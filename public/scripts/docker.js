@@ -50,8 +50,8 @@ $(function(){
         u+='</th><th>';
         u+='Image';
         u+='</th><th>';
-        // u+='Ports';
-        // u+='</th><th>';
+        u+='Ports';
+        u+='</th><th>';
         u+='Command';
         u+='</th><th>';
         u+='State';
@@ -66,9 +66,20 @@ $(function(){
             a+=j.id[x].substring(0,10);
             a+='</td><td>';
             a+=j.image[x];
-            // a+='</td><td>';
-            // a+=j.ports[x]
-            // console.log(j.ports[x])
+	    if($.isEmptyObject( j.ports[x]) == false){
+		a+='</td><td class="ports">';
+		a+='Private: ';
+		a+=j.ports[x].PrivatePort;
+		a+=' Public: ';
+		a+=j.ports[x].PublicPort;
+		a+=' IP: ';
+		a+=j.ports[x].IP;
+		a+=' Type: ';
+		a+=j.ports[x].Type;
+	    }
+	    else{
+		a+='</td><td>';
+	    }
             a+='</td><td>';
             a+=j.command[x];
             a+='</td><td id="'+j.id[x]+'">';
