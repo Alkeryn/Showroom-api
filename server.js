@@ -1,12 +1,4 @@
-const { Client } = require('pg')
-const client = new Client()
-var test = async function(){
-    const res = await client.query('SELECT $1::text as message', ['Hello world!'])
-    console.log(res.rows[0].message) // Hello world!
-    await client.end()
-}
-test()
-
+var sql = require("./modules/postgres.js")
 var docker = require("./modules/docker.js")
 var express = require('express');
 var app = express(),
