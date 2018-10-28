@@ -11,6 +11,19 @@ module.exports = {
             console.log(data.StatusCode);
         });
 
-    }
+    },
+    stop: function(containerid){
+        var container = docker.getContainer(containerid);
+        container.stop(function (err, data) {
+            console.log(data);
+        });
+
+    },
+    start: function(containerid){
+        var container = docker.getContainer(containerid);
+        container.start(function (err, data) {
+            console.log(data);
+        });
+    },
 
 }
