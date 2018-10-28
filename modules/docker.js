@@ -110,6 +110,23 @@ module.exports = {
 			    retour.mounts.push(containers[x].Mounts);
 			}
 			break
+		    case "*":
+			for(x in containers) {
+			    retour.id.push(containers[x].Id);
+			    retour.names.push(containers[x].Names[0]);
+			    retour.image.push(containers[x].Image);
+			    retour.imageid.push(containers[x].ImageId);
+			    retour.command.push(containers[x].Command);
+			    retour.created.push(containers[x].Created);
+			    retour.ports.push(containers[x].Ports);
+			    retour.labels.push(containers[x].Labels);
+			    retour.state.push(containers[x].State);
+			    retour.status.push(containers[x].Status);
+			    retour.hostconfig.push(containers[x].Hostconfig);
+			    retour.networksettings.push(containers[x].NetworkSettings);
+			    retour.mounts.push(containers[x].Mounts);
+			}
+			break
 		}
 	    }
 	    callback(retour);
