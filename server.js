@@ -10,12 +10,13 @@ var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 
-docker.list(console.log,'names','id','image');
+docker.list(console.log,'id','names','ports');
 
 io.sockets.on('connection', function (socket) {
         socket.emit('message', 'Sucessfully connected');
         });
 app.set('views', __dirname+'/html/');
+app.set(bodyParser.json());
 app.use(express.static(__dirname+'/public/'));
 app.use(session({secret: 'Scrt'}))
 
@@ -38,7 +39,7 @@ app.use(session({secret: 'Scrt'}))
         })
         .post('/main/stop', function(req, res) {
 
-		console.log(req.param.value1);
+		console.log(req.body);
 		docker.list(function(call){
 			res.send(call)},'id');
         })
