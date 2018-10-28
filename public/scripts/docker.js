@@ -1,18 +1,43 @@
+function getstate(callback,id){
+    $.post('main/state',{id: id},function(data,status,xhr){
+        callback(data);
+    });
+}
 function turn(value,id)
 {
     switch(value){
         case 'on':
-        $.post('main/start',{id: id},function(data,status,xhr){
-        console.log(data);
-        });
+            $.post('main/start',{id: id},function(data,status,xhr){
+                if( data == "started" ){
+                    getstate(function (state){
+                        $("#"+id).text(state)
+                    },id);
+                }
+            });
             break;
         case 'off':
-        $.post('main/stop',{id: id},function(data,status,xhr){
-            console.log(data);
-        });
-        break
+            $.post('main/stop',{id: id},function(data,status,xhr){
+                if( data == "stoped" ){
+                    getstate(function (state){
+                        $("#"+id).text(state)
+                    },id);
+                }
+            });
+            break
     }
-}
+};
+function btnclick(id){
+    getstate(function (state){
+        switch(state){
+            case 'running':
+                turn('off',id)
+                break
+            default:
+                turn('on',id)
+                break
+        }
+    },id);
+};
 $(function(){
     var docker=$("#docker")
     $.getJSON("main/containers", function(j){
@@ -45,10 +70,10 @@ $(function(){
             a+=j.ports[x];
             a+='</td><td>';
             a+=j.command[x];
-            a+='</td><td>';
+            a+='</td><td id="'+j.id[x]+'">';
             a+=j.state[x];
             a+='</td><td>';
-            a+='<button></button>';
+            a+='<button onclick=\"btnclick(\''+j.id[x]+'\')\" ></button>';
             a+='</td></tr>';
             u+=a;
         }

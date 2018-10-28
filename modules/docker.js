@@ -12,7 +12,6 @@ module.exports = {
 
     },
     stop: function(callback,containerid){
-	    console.log(containerid)
 	var container = docker.getContainer(containerid);
 	container.stop(function (err, data) {
 	    callback(data);
@@ -23,6 +22,12 @@ module.exports = {
 	var container = docker.getContainer(containerid);
 	container.start(function (err, data) {
 	    callback(data);
+	});
+    },
+    inspect: function(callback,containerid){
+	var container = docker.getContainer(containerid);
+	container.inspect( function(err,data) {
+	callback(data)
 	});
     },
     list: function(callback){ //callback tous les {nom,id,etc..} de tout les docker, peut prendre tous les arguments callback doit être le premier argument

@@ -8,7 +8,6 @@ var app = express(),
     ent = require('ent');
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 
 // docker.list(console.log,'id','names','ports','state');
@@ -32,17 +31,22 @@ app.use(session({secret: 'Scrt'}))
         })
         .get('/main/containers', function(req, res) {
 
-		docker.list(function(call){
-			res.send(call)},'*');
+		docker.list(function(data){
+			res.send(data)},'*');
         })
         .post('/main/start', function(req, res) {
-	        docker.start(function (call){
-	        res.send('container started'+call)
+	        docker.start(function (data){
+	        res.send('started')
 	        },req.body.id)
         })
         .post('/main/stop', function(req, res) {
-	        docker.stop(function (call){
-	        res.send('container stoped')
+	        docker.stop(function (data){
+	        res.send('stoped')
+	        },req.body.id)
+        })
+        .post('/main/state', function(req, res) {
+	        docker.inspect(function (data){
+	        res.send(data.State.Status)
 	        },req.body.id)
         })
 
