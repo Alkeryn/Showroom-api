@@ -1,5 +1,6 @@
-var sql = require("./modules/postgres.js")
-var docker = require("./modules/docker.js")
+var noop = function(){};
+var sql = require("./modules/postgres.js");
+var docker = require("./modules/docker.js");
 var express = require('express');
 var app = express(),
     server = require('http').createServer(app),
@@ -35,14 +36,14 @@ app.use(session({secret: 'Scrt'}))
 			res.send(call)},'*');
         })
         .post('/main/start', function(req, res) {
-		console.log(req.body.id);
-	        docker.start(req.body.id)
-	        res.send('container started')
+	        docker.start(function (call){
+	        res.send('container started'+call)
+	        },req.body.id)
         })
         .post('/main/stop', function(req, res) {
-		console.log(req.body.id);
-	        docker.stop(req.body.id)
+	        docker.stop(function (call){
 	        res.send('container stoped')
+	        },req.body.id)
         })
 
         .use(function(req, res, next){

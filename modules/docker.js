@@ -1,28 +1,28 @@
 var Docker = require("dockerode");
 var docker = new Docker({socketPath: '/var/run/docker.sock'});
 module.exports = {
-    pull: function(name){
+    pull: function(callback,name){
 	docker.pull(name, function (err, stream) {
-	    // streaming output from pull...
 	});
     },
-    run: function(name){
+    run: function(callback,name){
 	docker.run(name, ['bash', '-c', 'ls -al /'], process.stdout, function (err, data, container) {
-	    console.log(data.StatusCode);
+	    callback(data.StatusCode);
 	});
 
     },
-    stop: function(containerid){
+    stop: function(callback,containerid){
+	    console.log(containerid)
 	var container = docker.getContainer(containerid);
 	container.stop(function (err, data) {
-	    console.log(data);
+	    callback(data);
 	});
 
     },
-    start: function(containerid){
+    start: function(callback,containerid){
 	var container = docker.getContainer(containerid);
 	container.start(function (err, data) {
-	    console.log(data);
+	    callback(data);
 	});
     },
     list: function(callback){ //callback tous les {nom,id,etc..} de tout les docker, peut prendre tous les arguments callback doit être le premier argument
