@@ -1,3 +1,12 @@
+const { Client } = require('pg')
+const client = new Client()
+var test = async function(){
+    const res = await client.query('SELECT $1::text as message', ['Hello world!'])
+    console.log(res.rows[0].message) // Hello world!
+    await client.end()
+}
+test()
+
 var docker = require("./modules/docker.js")
 var express = require('express');
 var app = express(),
@@ -7,7 +16,7 @@ var app = express(),
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
-retour = docker.listlog('names','id','image');
+docker.list(console.log,'names','id','image');
 
 
 io.sockets.on('connection', function (socket) {

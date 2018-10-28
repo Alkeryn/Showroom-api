@@ -25,8 +25,9 @@ module.exports = {
 	    console.log(data);
 	});
     },
-    listlog: function(){ //liste tous les {nom,id,etc..} de tout les docker, peut prendre tous les arguments
+    list: function(callback){ //callback tous les {nom,id,etc..} de tout les docker, peut prendre tous les arguments callback doit être le premier argument
 	what=arguments
+	docker.listContainers({all: true}, function(err, containers) {
 	var retour = {
 	    "id":[],
 	    "names":[],
@@ -42,7 +43,6 @@ module.exports = {
 	    "networksettings":[],
 	    "mounts":[]
 	}
-	docker.listContainers({all: true}, function(err, containers) {
 	    for(a in what){
 		switch(what[a]){
 		    case "id":
@@ -82,7 +82,7 @@ module.exports = {
 			break
 		    case "labels":
 			for(x in containers) {
-			    retour.labels.push(containers[x].Lables);
+			    retour.labels.push(containers[x].Labels);
 			}
 			break
 		    case "state":
@@ -112,7 +112,7 @@ module.exports = {
 			break
 		}
 	    }
-	    console.log(retour);
+	    callback(retour);
 	});
     },
 }
