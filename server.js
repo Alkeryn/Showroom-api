@@ -1,3 +1,4 @@
+var docker = require("./modules/docker.js")
 var express = require('express');
 var app = express(),
     server = require('http').createServer(app),
@@ -7,6 +8,7 @@ var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
+docker.run("debian:latest");
 
 io.sockets.on('connection', function (socket) {
         socket.emit('message', 'Sucessfully connected');

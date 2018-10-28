@@ -4,6 +4,7 @@
     "dependencies": {
         "body-parser": "~1.10.1",
         "cookie-session": "~1.1.0",
+        "dockerode": "^2.5.7",
         "ejs": "~2.1.4",
         "ent": "^2.2.0",
         "express": "^4.11.2",
