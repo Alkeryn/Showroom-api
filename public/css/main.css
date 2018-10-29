@@ -32,7 +32,7 @@ table {
 }
 table .ports{
 max-width: 8em;
-overflow-x: scroll;
+overflow-x: auto;
 overflow-y: hidden;
 font-size: 0.6em;
 }
