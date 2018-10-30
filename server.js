@@ -34,22 +34,22 @@ app.use(session({secret: 'Scrt'}))
                 next();
             }
         })
-        .get('/main/containers', function(req, res) {
+        .get('/api/containers', function(req, res) {
 
 		docker.list(function(data){
 			res.send(data)},'names','id','image','ports','command','state');
         })
-        .post('/main/start', function(req, res) {
+        .post('/api/containers/start', function(req, res) {
 	        docker.start(function (data){
 	        res.send('started')
 	        },req.body.id)
         })
-        .post('/main/stop', function(req, res) {
+        .post('/api/containers/stop', function(req, res) {
 	        docker.stop(function (data){
 	        res.send('stoped')
 	        },req.body.id)
         })
-        .post('/main/state', function(req, res) {
+        .post('/api/containers/state', function(req, res) {
 	        docker.inspect(function (data){
 	        res.send(data.State.Status)
 	        },req.body.id)

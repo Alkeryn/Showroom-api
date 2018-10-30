@@ -1,5 +1,5 @@
 function getstate(callback,id){
-    $.post('main/state',{id: id},function(data,status,xhr){
+    $.post('api/containers/state',{id: id},function(data,status,xhr){
         callback(data);
     });
 }
@@ -7,7 +7,7 @@ function turn(value,id)
 {
     switch(value){
         case 'on':
-            $.post('main/start',{id: id},function(data,status,xhr){
+            $.post('api/containers/start',{id: id},function(data,status,xhr){
                 if( data == "started" ){
                     getstate(function (state){
                         $("#"+id).children(".state").text(state)
@@ -16,7 +16,7 @@ function turn(value,id)
             });
             break;
         case 'off':
-            $.post('main/stop',{id: id},function(data,status,xhr){
+            $.post('api/containers/stop',{id: id},function(data,status,xhr){
                 if( data == "stoped" ){
                     getstate(function (state){
                         $("#"+id).children(".state").text(state)
@@ -40,7 +40,7 @@ function btnclick(id){
 };
 $(function(){
     var docker=$("#docker")
-    $.getJSON("main/containers", function(j){
+    $.getJSON("api/containers", function(j){
         var u ='';
         u+='<table>';
         u+='<tr><th>';
