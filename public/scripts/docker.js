@@ -10,7 +10,7 @@ function turn(value,id)
             $.post('main/start',{id: id},function(data,status,xhr){
                 if( data == "started" ){
                     getstate(function (state){
-                        $("#"+id).text(state)
+                        $("#"+id).children(".state").text(state)
                     },id);
                 }
             });
@@ -19,7 +19,7 @@ function turn(value,id)
             $.post('main/stop',{id: id},function(data,status,xhr){
                 if( data == "stoped" ){
                     getstate(function (state){
-                        $("#"+id).text(state)
+                        $("#"+id).children(".state").text(state)
                     },id);
                 }
             });
@@ -60,7 +60,7 @@ $(function(){
         u+='</th></tr>';
         for(x in j.id){
             var a ='';
-            a+='<tr><td>';
+            a+='<tr id='+j.id[x]+'><td>';
             a+=j.names[x].substring(1);
             a+='</td><td>';
             a+=j.id[x].substring(0,10);
@@ -82,10 +82,10 @@ $(function(){
 	    }
             a+='</td><td>';
             a+=j.command[x];
-            a+='</td><td id="'+j.id[x]+'">';
+            a+='</td><td class="state">';
             a+=j.state[x];
             a+='</td><td>';
-            a+='<button class="' + j.id[x] + '">Toggle</button>';
+            a+='<button class="button">Toggle</button>';
             a+='</td></tr>';
             u+=a;
         }
@@ -94,7 +94,7 @@ $(function(){
         // docker.append('<p> Name :' + j.names[a] + ' | State : ' + j.state[a] + ' | Image : ' + j.image[a] + '</p>');
         // docker.append('<p>Name : ' + json.name[a] + '</p>')
         $("button").click(function() {
-            btnclick($(this).attr("class"))
+            btnclick(($(this).parent().parent().attr("id")));
         });
     });
 });

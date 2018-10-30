@@ -37,7 +37,7 @@ app.use(session({secret: 'Scrt'}))
         .get('/main/containers', function(req, res) {
 
 		docker.list(function(data){
-			res.send(data)},'*');
+			res.send(data)},'names','id','image','ports','command','state');
         })
         .post('/main/start', function(req, res) {
 	        docker.start(function (data){
