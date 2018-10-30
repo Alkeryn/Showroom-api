@@ -32,6 +32,7 @@ module.exports = {
     },
     list: function(callback){ //callback tous les {nom,id,etc..} de tout les docker, peut prendre tous les arguments callback doit être le premier argument
 	what=arguments
+	delete what[0]
 	docker.listContainers({all: true}, function(err, containers) {
 	var retour = {};
 	    for(a in what){
