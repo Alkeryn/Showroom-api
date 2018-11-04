@@ -70,6 +70,16 @@ app.use(session({secret: 'Scrt'}))
                     }
 	        },req.body.image,req.body.name)
         })
+        .post('/api/containers/pull', function(req, res) {
+	        docker.pull(function (err,stream){
+	            if(err){
+                        res.send(err.message);
+                    }
+                    else{
+                        res.send("done");
+                    }
+	        },req.body.image)
+        })
 
 //Default
         .use(function(req, res, next){

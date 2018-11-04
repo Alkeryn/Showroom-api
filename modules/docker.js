@@ -3,13 +3,14 @@ var docker = new Docker({socketPath: '/var/run/docker.sock'});
 module.exports = {
     pull: function(callback,image){
 	docker.pull(image, function (err, stream) {
+	    callback(err,stream);
 	});
     },
     create: function(callback,image,name){
         docker.createContainer({Image: image, Cmd: ['/bin/bash'], name: name}, function (err, container) {
             // container.start(function (err, data) {
             // });
-            callback(err,container)
+            callback(err,container);
         });
     },
     run: function(callback,image){
