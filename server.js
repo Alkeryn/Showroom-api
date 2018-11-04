@@ -1,9 +1,10 @@
-var noop = function(){};
+const noop = function(){};
 
-var sql = require("./modules/postgres.js"),
+const sql = require("./modules/postgres.js"),
     docker = require("./modules/docker.js");
+    compose = require("./modules/compose.js");
 
-var express = require('express'),
+const express = require('express'),
     app = express(),
     fs = require('fs'),
     server = require('http').createServer(app),
@@ -14,7 +15,7 @@ var express = require('express'),
 
 
 // docker.list(console.log,'id','names','ports','state');
-docker.list(console.log,'*');
+// docker.list(console.log,'*');
 
 io.sockets.on('connection', function (socket) {
         socket.emit('message', 'Sucessfully connected');

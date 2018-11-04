@@ -1,5 +1,5 @@
-var root=process.cwd()
-var database = require(root+"/database.json")
+const root=process.cwd()
+const database = require(root+"/database.json")
 
 const { Client } = require('pg')
 const client = new Client(database)

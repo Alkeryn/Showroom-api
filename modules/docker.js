@@ -1,5 +1,5 @@
-var Docker = require("dockerode");
-var docker = new Docker({socketPath: '/var/run/docker.sock'});
+const Docker = require("dockerode");
+const docker = new Docker({socketPath: '/var/run/docker.sock'});
 module.exports = {
     pull: function(callback,image){
 	docker.pull(image, function (err, stream) {
