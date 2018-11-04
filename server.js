@@ -1,4 +1,4 @@
-const noop = function(){};
+noop = function(){};
 
 const sql = require("./modules/postgres.js"),
     docker = require("./modules/docker.js");
@@ -16,6 +16,7 @@ const express = require('express'),
 
 // docker.list(console.log,'id','names','ports','state');
 // docker.list(console.log,'*');
+// compose.up(console.log,"medialog");
 
 io.sockets.on('connection', function (socket) {
         socket.emit('message', 'Sucessfully connected');
@@ -35,7 +36,7 @@ app.use(session({secret: 'Scrt'}))
                 next();
             }
         })
-//API
+// Containers API
         .get('/api/containers', function(req, res) {
 
 		docker.list(function(data){
@@ -81,7 +82,40 @@ app.use(session({secret: 'Scrt'}))
                     }
 	        },req.body.image)
         })
+// COMPOSE
+        .post('/api/compose/up', function(req, res) {
+            compose.create((stdout,stderr,err) => {
+                compose.start((stdout,stderr,err) => {
+                    res.send("started")
+                },req.body.name);
+            },req.body.name);
 
+        })
+        .post('/api/compose/down', function(req, res) {
+            compose.down(function(stdout,stderr,err){
+                    res.send("done");
+            },req.body.name)
+        })
+        .post('/api/compose/start', function(req, res) {
+            compose.start(function(stdout,stderr,err){
+                    res.send("started");
+            },req.body.name)
+        })
+        .post('/api/compose/stop', function(req, res) {
+            compose.stop(function(stdout,stderr,err){
+                    res.send("stoped");
+            },req.body.name)
+        })
+        .post('/api/compose/create', function(req, res) {
+            compose.create(function(stdout,stderr,err){
+                    res.send("done");
+            },req.body.name)
+        })
+        .post('/api/compose/rm', function(req, res) {
+            compose.rm(function(stdout,stderr,err){
+                    res.send("done");
+            },req.body.name)
+        })
 //Default
         .use(function(req, res, next){
                 res.redirect('/main');
