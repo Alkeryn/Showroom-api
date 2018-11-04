@@ -39,6 +39,11 @@ or fetch the json with curl
 
 # Implemented API Documentation :
 
+/api/docker mimic docker command
+
+/api/compose mimic docker-compose command
+
+/api/apps allow to create / delete / import / export "apps"
 
 ## GET API :
 
@@ -61,7 +66,7 @@ Path| Description | Takes | example | Should returns
 /api/compose/down| stop and rm an app |name|curl -X POST -d "name=medialog" http://localhost:8080/api/compose/down|"done"
 /api/compose/start| start an app |name|curl -X POST -d "name=medialog" http://localhost:8080/api/compose/start|"started"
 /api/compose/stop| stop an app |name|curl -X POST -d "name=medialog" http://localhost:8080/api/compose/stop|"stoped"
-/api/compose/create| create an app |image|curl -X POST -d "name=medialog" http://localhost:8080/api/compose/create|"done"
+/api/compose/create| create |image|curl -X POST -d "name=medialog" http://localhost:8080/api/compose/create|"done"
 
 # Todo API Documentation :
 

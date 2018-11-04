@@ -86,34 +86,64 @@ app.use(session({secret: 'Scrt'}))
         .post('/api/compose/up', function(req, res) {
             compose.create((stdout,stderr,err) => {
                 compose.start((stdout,stderr,err) => {
+                    if(err){
+                    res.send("Error")
+                    }
+                    else{
                     res.send("started")
+                    }
                 },req.body.name);
             },req.body.name);
 
         })
         .post('/api/compose/down', function(req, res) {
             compose.down(function(stdout,stderr,err){
+                    if(err){
+                    res.send("Error")
+                    }
+                    else{
                     res.send("done");
+                    }
             },req.body.name)
         })
         .post('/api/compose/start', function(req, res) {
             compose.start(function(stdout,stderr,err){
+                    if(err){
+                    res.send("Error")
+                    }
+                    else{
                     res.send("started");
+                    }
             },req.body.name)
         })
         .post('/api/compose/stop', function(req, res) {
             compose.stop(function(stdout,stderr,err){
+                    if(err){
+                    res.send("Error")
+                    }
+                    else{
                     res.send("stoped");
+                    }
             },req.body.name)
         })
         .post('/api/compose/create', function(req, res) {
             compose.create(function(stdout,stderr,err){
+                    if(err){
+                    res.send("Error")
+                    }
+                    else{
                     res.send("done");
+                    }
             },req.body.name)
         })
         .post('/api/compose/rm', function(req, res) {
             compose.rm(function(stdout,stderr,err){
+                    if(err){
+                    res.send("Error")
+                    }
+                    else{
                     res.send("done");
+                    }
             },req.body.name)
         })
 //Default
