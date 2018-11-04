@@ -1,12 +1,19 @@
 var Docker = require("dockerode");
 var docker = new Docker({socketPath: '/var/run/docker.sock'});
 module.exports = {
-    pull: function(callback,name){
-	docker.pull(name, function (err, stream) {
+    pull: function(callback,image){
+	docker.pull(image, function (err, stream) {
 	});
     },
-    run: function(callback,name){
-	docker.run(name, ['bash', '-c', 'ls -al /'], process.stdout, function (err, data, container) {
+    create: function(callback,image,name){
+        docker.createContainer({Image: image, Cmd: ['/bin/bash'], name: name}, function (err, container) {
+            // container.start(function (err, data) {
+            // });
+            callback(err,container)
+        });
+    },
+    run: function(callback,image){
+	docker.run(image, ['bash', '-c', 'ls -al /'], process.stdout, function (err, data, container) {
 	    callback(data.StatusCode);
 	});
 

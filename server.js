@@ -42,23 +42,33 @@ app.use(session({secret: 'Scrt'}))
         })
         .post('/api/containers/start', function(req, res) {
 	        docker.start(function (data){
-	        res.send('started')
+	        res.send('started');
 	        },req.body.id)
         })
         .post('/api/containers/stop', function(req, res) {
 	        docker.stop(function (data){
-	        res.send('stoped')
-	        },req.body.id)
-        })
-        .post('/api/containers/remove', function(req, res) {
-	        docker.remove(function (data){
-	        res.send('done')
+	        res.send('stoped');
 	        },req.body.id)
         })
         .post('/api/containers/state', function(req, res) {
 	        docker.inspect(function (data){
 	        res.send(data.State.Status)
 	        },req.body.id)
+        })
+        .post('/api/containers/remove', function(req, res) {
+	        docker.remove(function (data){
+	        res.send('done');
+	        },req.body.id)
+        })
+        .post('/api/containers/create', function(req, res) {
+	        docker.create(function (err,container){
+	            if(err){
+                        res.send(err.message);
+                    }
+                    else{
+                        res.send(container.id);
+                    }
+	        },req.body.image,req.body.name)
         })
 
 //Default
