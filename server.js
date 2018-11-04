@@ -34,6 +34,7 @@ app.use(session({secret: 'Scrt'}))
                 next();
             }
         })
+//API
         .get('/api/containers', function(req, res) {
 
 		docker.list(function(data){
@@ -49,12 +50,18 @@ app.use(session({secret: 'Scrt'}))
 	        res.send('stoped')
 	        },req.body.id)
         })
+        .post('/api/containers/remove', function(req, res) {
+	        docker.remove(function (data){
+	        res.send('done')
+	        },req.body.id)
+        })
         .post('/api/containers/state', function(req, res) {
 	        docker.inspect(function (data){
 	        res.send(data.State.Status)
 	        },req.body.id)
         })
 
+//Default
         .use(function(req, res, next){
                 res.redirect('/main');
         })

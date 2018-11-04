@@ -54,6 +54,7 @@ Path| Description | Takes | example | Should returns
 /api/containers/stop | Stop a containers | id | `curl -d "id=f9bd3802cb4182" -X POST "localhost:8080/api/containers/stop"` | "stoped"
 /api/containers/start | Stop a containers | id | `curl -d "id=f9bd3802cb4182" -X POST "localhost:8080/api/containers/start"`| "started"
 /api/containers/state | return the state of a container| id | `curl -d "id=f9bd3802cb4182" -X POST "localhost:8080/api/containers/state"`| state {running, created ...}
+/api/containers/remove | remove a containers | id | `curl -d "id=f9bd3802cb4182" -X POST "localhost:8080/api/remove"`| "done"
 
 # Todo API Documentation :
 
@@ -71,7 +72,6 @@ Path| Description | Takes | example | Should returns
 /api/containers/pull | pull an image | image | `curl -d "image=debian:latest" -X POST "localhost:8080/api/containers/pull"`| "done"
 /api/containers/run | create and run a containers | image | `curl -d "image=debian:latest" -X POST "localhost:8080/api/containers/run"`| "started"
 /api/containers/create | create a containers | image | `curl -d "image=debian:latest" -X POST "localhost:8080/api/containers/create"`| "done"
-/api/containers/remove | remove a containers | id | `curl -d "id=f9bd3802cb4182" -X POST "localhost:8080/api/remove"`| "done"
 /api/compose/create | create an app |<span>|<span>| "done"
 /api/compose/start| start an app |<span>|<span>|"started"
 /api/compose/stop| stop an app |<span>|<span>|"stoped"

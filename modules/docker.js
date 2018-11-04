@@ -11,6 +11,13 @@ module.exports = {
 	});
 
     },
+    remove: function(callback,containerid){
+	var container = docker.getContainer(containerid);
+	container.remove(function (err, data) {
+	    callback(data);
+	});
+
+    },
     stop: function(callback,containerid){
 	var container = docker.getContainer(containerid);
 	container.stop(function (err, data) {
