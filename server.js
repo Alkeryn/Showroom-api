@@ -16,6 +16,8 @@ const express = require('express'),
 
 // docker.list(console.log,'id','names','ports','state');
 // docker.list(console.log,'*');
+// compose.list(console.log,'names','id');
+compose.list(console.log,'names','id');
 // compose.up(console.log,"medialog");
 
 io.sockets.on('connection', function (socket) {
