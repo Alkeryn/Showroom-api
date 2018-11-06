@@ -39,7 +39,7 @@ app.use(session({secret: 'Scrt'}))
             }
         })
 // GET API
-        .get('/api/:type', function(req, res) {
+        .get('/api/:type', function(req, res, next) {
             switch (req.params.type) {
                 case 'containers':
                     docker.list(function(data){
@@ -52,12 +52,13 @@ app.use(session({secret: 'Scrt'}))
                 case 'apps':
                     break;
                 default:
+                    next();
 
             }
 
         })
 // POST API
-        .post('/api/:type/:action', function(req, res) {
+        .post('/api/:type/:action', function(req, res, next) {
             switch (req.params.type) {
                 case 'containers':
                     switch (req.paramas.action) {
@@ -102,6 +103,7 @@ app.use(session({secret: 'Scrt'}))
                             },req.body.image)
                             break;
                         default:
+                            next();
                     }
                     break;
                 case 'compose':
@@ -170,6 +172,7 @@ app.use(session({secret: 'Scrt'}))
                             },req.body.name)
                             break;
                         default:
+                            next();
                     }
                     break;
                 case 'apps':
@@ -177,9 +180,11 @@ app.use(session({secret: 'Scrt'}))
                         case 'import':
                             break;
                         default:
+                            next();
                     }
                     break;
                 default:
+                    next();
             }
         })
 //Default
