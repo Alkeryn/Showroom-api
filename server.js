@@ -16,7 +16,6 @@ const express = require('express'),
 
 // docker.list(console.log,'id','names','ports','state');
 // docker.list(console.log,'*');
-// compose.list(console.log,'names','id');
 compose.list(console.log,'names','id');
 // compose.up(console.log,"medialog");
 
@@ -44,9 +43,11 @@ app.use(session({secret: 'Scrt'}))
             switch (req.params.type) {
                 case 'containers':
                     docker.list(function(data){
-                        res.send(data)},'names','id','image','ports','command','state');
+                        res.send(data)},'names','id','image','ports','command','state','labels');
                     break;
                 case 'compose':
+                    compose.list(function(data){
+                        res.send(data)},'names','id','image','ports','command','state');
                     break;
                 case 'apps':
                     break;
