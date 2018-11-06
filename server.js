@@ -28,6 +28,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({secret: 'Scrt'}))
 
+// WEBUI
         .get('/:input', function(req, res, next) {
             if(fs.existsSync(__dirname+'/html/'+req.params.input+'.ejs')){
                 res.render(req.params.input+'.ejs');
@@ -36,115 +37,147 @@ app.use(session({secret: 'Scrt'}))
                 next();
             }
         })
-// Containers API
-        .get('/api/containers', function(req, res) {
+// GET API
+        .get('/api/:type', function(req, res) {
+            switch (req.params.type) {
+                case 'containers':
+                    docker.list(function(data){
+                        res.send(data)},'names','id','image','ports','command','state');
+                    break;
+                case 'compose':
+                    break;
+                case 'apps':
+                    break;
+                default:
 
-		docker.list(function(data){
-			res.send(data)},'names','id','image','ports','command','state');
-        })
-        .post('/api/containers/start', function(req, res) {
-	        docker.start(function (data){
-	        res.send('started');
-	        },req.body.id)
-        })
-        .post('/api/containers/stop', function(req, res) {
-	        docker.stop(function (data){
-	        res.send('stoped');
-	        },req.body.id)
-        })
-        .post('/api/containers/state', function(req, res) {
-	        docker.inspect(function (data){
-	        res.send(data.State.Status)
-	        },req.body.id)
-        })
-        .post('/api/containers/remove', function(req, res) {
-	        docker.remove(function (data){
-	        res.send('done');
-	        },req.body.id)
-        })
-        .post('/api/containers/create', function(req, res) {
-	        docker.create(function (err,container){
-	            if(err){
-                        res.send(err.message);
-                    }
-                    else{
-                        res.send(container.id);
-                    }
-	        },req.body.image,req.body.name)
-        })
-        .post('/api/containers/pull', function(req, res) {
-	        docker.pull(function (err,stream){
-	            if(err){
-                        res.send(err.message);
-                    }
-                    else{
-                        res.send("done");
-                    }
-	        },req.body.image)
-        })
-// COMPOSE
-        .post('/api/compose/up', function(req, res) {
-            compose.create((stdout,stderr,err) => {
-                compose.start((stdout,stderr,err) => {
-                    if(err){
-                    res.send("Error")
-                    }
-                    else{
-                    res.send("started")
-                    }
-                },req.body.name);
-            },req.body.name);
+            }
 
         })
-        .post('/api/compose/down', function(req, res) {
-            compose.down(function(stdout,stderr,err){
-                    if(err){
-                    res.send("Error")
+// POST API
+        .post('/api/:type/:action', function(req, res) {
+            switch (req.params.type) {
+                case 'containers':
+                    switch (req.paramas.action) {
+                        case 'start':
+                            docker.start(function (data){
+                                res.send('started');
+                            },req.body.id)
+                            break;
+                        case 'stop':
+                            docker.stop(function (data){
+                                res.send('stoped');
+                            },req.body.id)
+                            break;
+                        case 'state':
+                            docker.inspect(function (data){
+                                res.send(data.State.Status)
+                            },req.body.id)
+                            break;
+                        case 'remove':
+                            docker.remove(function (data){
+                                res.send('done');
+                            },req.body.id)
+                            break;
+                        case 'create':
+                            docker.create(function (err,container){
+                                if(err){
+                                    res.send(err.message);
+                                }
+                                else{
+                                    res.send(container.id);
+                                }
+                            },req.body.image,req.body.name)
+                            break;
+                        case 'pull':
+                            docker.pull(function (err,stream){
+                                if(err){
+                                    res.send(err.message);
+                                }
+                                else{
+                                    res.send("done");
+                                }
+                            },req.body.image)
+                            break;
+                        default:
                     }
-                    else{
-                    res.send("done");
+                    break;
+                case 'compose':
+                    switch (req.params.action) {
+                        case 'up':
+                            compose.create((stdout,stderr,err) => {
+                                compose.start((stdout,stderr,err) => {
+                                    if(err){
+                                        res.send("Error")
+                                    }
+                                    else{
+                                        res.send("started")
+                                    }
+                                },req.body.name);
+                            },req.body.name);
+
+                            break;
+                        case 'down':
+                            compose.down(function(stdout,stderr,err){
+                                if(err){
+                                    res.send("Error")
+                                }
+                                else{
+                                    res.send("done");
+                                }
+                            },req.body.name)
+                            break;
+                        case 'start':
+                            compose.start(function(stdout,stderr,err){
+                                if(err){
+                                    res.send("Error")
+                                }
+                                else{
+                                    res.send("started");
+                                }
+                            },req.body.name)
+                            break;
+                        case 'stop':
+                            compose.stop(function(stdout,stderr,err){
+                                if(err){
+                                    res.send("Error")
+                                }
+                                else{
+                                    res.send("stoped");
+                                }
+                            },req.body.name)
+                            break;
+                        case 'create':
+                            compose.create(function(stdout,stderr,err){
+                                if(err){
+                                    res.send("Error")
+                                }
+                                else{
+                                    res.send("done");
+                                }
+                            },req.body.name)
+                            break;
+                        case 'rm':
+                            compose.rm(function(stdout,stderr,err){
+                                if(err){
+                                    res.send("Error")
+                                }
+                                else{
+                                    res.send("done");
+                                }
+                            },req.body.name)
+                            break;
+                        default:
                     }
-            },req.body.name)
-        })
-        .post('/api/compose/start', function(req, res) {
-            compose.start(function(stdout,stderr,err){
-                    if(err){
-                    res.send("Error")
+                    break;
+                case 'apps':
+                    switch (req.paramas.action) {
+                        case 'import':
+                            break;
+                        default:
                     }
-                    else{
-                    res.send("started");
-                    }
-            },req.body.name)
-        })
-        .post('/api/compose/stop', function(req, res) {
-            compose.stop(function(stdout,stderr,err){
-                    if(err){
-                    res.send("Error")
-                    }
-                    else{
-                    res.send("stoped");
-                    }
-            },req.body.name)
-        })
-        .post('/api/compose/create', function(req, res) {
-            compose.create(function(stdout,stderr,err){
-                    if(err){
-                    res.send("Error")
-                    }
-                    else{
-                    res.send("done");
-                    }
-            },req.body.name)
-        })
-        .post('/api/compose/rm', function(req, res) {
-            compose.rm(function(stdout,stderr,err){
-                    if(err){
-                    res.send("Error")
-                    }
-                    else{
-                    res.send("done");
-                    }
-            },req.body.name)
+                    break;
+                default:
+            }
         })
 //Default
         .use(function(req, res, next){
