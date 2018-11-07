@@ -129,6 +129,11 @@ module.exports = {
                         for(x in containers) {
                             list.mounts.push(containers[x].Mounts);
                         }
+                    case "compose":
+                        list.compose = [];
+                        for(x in containers) {
+                            list.compose.push(containers[x].Labels["com.docker.compose.project"]);
+                        }
                         break;
                     case "*":
                         list = {
@@ -145,6 +150,7 @@ module.exports = {
                             "hostconfig":[],
                             "networksettings":[],
                             "mounts":[],
+                            "compose":[],
                         }
                         for(x in containers) {
                             list.id.push(containers[x].Id);
@@ -160,6 +166,7 @@ module.exports = {
                             list.hostconfig.push(containers[x].HostConfig);
                             list.networksettings.push(containers[x].NetworkSettings);
                             list.mounts.push(containers[x].Mounts);
+                            list.compose.push(containers[x].Labels["com.docker.compose.project"]);
                         }
                         break;
                 }

@@ -43,7 +43,7 @@ app.use(session({secret: 'Scrt'}))
 	switch (req.params.type) {
 	    case 'containers':
 		docker.list(function(data){
-		    res.send(data)},'names','id','image','ports','command','state','labels');
+		    res.send(data)},'names','id','image','ports','command','state','compose');
 		break;
 	    case 'compose':
 		compose.list(function(data){
