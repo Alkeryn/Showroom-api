@@ -61,7 +61,7 @@ app.use(session({secret: 'Scrt'}))
     .post('/api/:type/:action', function(req, res, next) {
 	switch (req.params.type) {
 	    case 'containers':
-		switch (req.paramas.action) {
+		switch (req.params.action) {
 		    case 'start':
 			docker.start(function (data){
 			    res.send('started');
@@ -176,7 +176,7 @@ app.use(session({secret: 'Scrt'}))
 		}
 		break;
 	    case 'apps':
-		switch (req.paramas.action) {
+		switch (req.params.action) {
 		    case 'import':
 			break;
 		    default:
