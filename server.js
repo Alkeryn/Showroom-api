@@ -1,8 +1,8 @@
 noop = function(){};
 
 const sql = require("./modules/postgres.js"),
-    docker = require("./modules/docker.js");
-compose = require("./modules/compose.js");
+    docker = require("./modules/docker.js"),
+    compose = require("./modules/compose.js");
 
 const express = require('express'),
     app = express(),
