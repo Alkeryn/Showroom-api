@@ -46,92 +46,92 @@ module.exports = {
         });
     },
     list: function(callback){ //callback tous les {nom,id,etc..} de tout les docker, peut prendre tous les arguments callback doit être le premier argument
-        what=arguments
+        let what=arguments
         delete what[0]
         docker.listContainers({all: true}, function(err, containers) {
-            var retour = {};
+            var list = {};
             for(a in what){
                 switch(what[a]){
                     case "id":
-                        retour.id = [];
+                        list.id = [];
                         for(x in containers) {
-                            retour.id.push(containers[x].Id);
+                            list.id.push(containers[x].Id);
                         }
                         break;
                     case "names":
-                        retour.names = [];
+                        list.names = [];
                         for(x in containers) {
-                            retour.names.push(containers[x].Names[0]);
+                            list.names.push(containers[x].Names[0]);
                         }
                         break;
                     case "image":
-                        retour.image = [];
+                        list.image = [];
                         for(x in containers) {
-                            retour.image.push(containers[x].Image);
+                            list.image.push(containers[x].Image);
                         }
                         break;
                     case "imageid":
-                        retour.imageid = [];
+                        list.imageid = [];
                         for(x in containers) {
-                            retour.imageid.push(containers[x].ImageID);
+                            list.imageid.push(containers[x].ImageID);
                         }
                         break; //verified to there
                     case "command":
-                        retour.command = [];
+                        list.command = [];
                         for(x in containers) {
-                            retour.command.push(containers[x].Command);
+                            list.command.push(containers[x].Command);
                         }
                         break;
                     case "created":
-                        retour.created = [];
+                        list.created = [];
                         for(x in containers) {
-                            retour.created.push(containers[x].Created);
+                            list.created.push(containers[x].Created);
                         }
                         break;
                     case "ports":
-                        retour.ports = [];
+                        list.ports = [];
                         for(x in containers) {
-                            retour.ports.push(containers[x].Ports[0]);
+                            list.ports.push(containers[x].Ports[0]);
                         }
                         break;
                     case "labels":
-                        retour.labels = [];
+                        list.labels = [];
                         for(x in containers) {
-                            retour.labels.push(containers[x].Labels);
+                            list.labels.push(containers[x].Labels);
                         }
                         break;
                     case "state":
-                        retour.state = [];
+                        list.state = [];
                         for(x in containers) {
-                            retour.state.push(containers[x].State);
+                            list.state.push(containers[x].State);
                         }
                         break;
                     case "status":
-                        retour.status = [];
+                        list.status = [];
                         for(x in containers) {
-                            retour.status.push(containers[x].Status);
+                            list.status.push(containers[x].Status);
                         }
                         break;
                     case "hostconfig":
-                        retour.hostconfig = [];
+                        list.hostconfig = [];
                         for(x in containers) {
-                            retour.hostconfig.push(containers[x].HostConfig);
+                            list.hostconfig.push(containers[x].HostConfig);
                         }
                         break;
                     case "networksettings":
-                        retour.networksettings = [];
+                        list.networksettings = [];
                         for(x in containers) {
-                            retour.networksettings.push(containers[x].NetworkSettings);
+                            list.networksettings.push(containers[x].NetworkSettings);
                         }
                         break;
                     case "mounts":
-                        retour.mounts = [];
+                        list.mounts = [];
                         for(x in containers) {
-                            retour.mounts.push(containers[x].Mounts);
+                            list.mounts.push(containers[x].Mounts);
                         }
                         break;
                     case "*":
-                        retour = {
+                        list = {
                             "id":[],
                             "names":[],
                             "image":[],
@@ -147,24 +147,24 @@ module.exports = {
                             "mounts":[],
                         }
                         for(x in containers) {
-                            retour.id.push(containers[x].Id);
-                            retour.names.push(containers[x].Names[0]);
-                            retour.image.push(containers[x].Image);
-                            retour.imageid.push(containers[x].ImageID);
-                            retour.command.push(containers[x].Command);
-                            retour.created.push(containers[x].Created);
-                            retour.ports.push(containers[x].Ports[0]);
-                            retour.labels.push(containers[x].Labels);
-                            retour.state.push(containers[x].State);
-                            retour.status.push(containers[x].Status);
-                            retour.hostconfig.push(containers[x].HostConfig);
-                            retour.networksettings.push(containers[x].NetworkSettings);
-                            retour.mounts.push(containers[x].Mounts);
+                            list.id.push(containers[x].Id);
+                            list.names.push(containers[x].Names[0]);
+                            list.image.push(containers[x].Image);
+                            list.imageid.push(containers[x].ImageID);
+                            list.command.push(containers[x].Command);
+                            list.created.push(containers[x].Created);
+                            list.ports.push(containers[x].Ports[0]);
+                            list.labels.push(containers[x].Labels);
+                            list.state.push(containers[x].State);
+                            list.status.push(containers[x].Status);
+                            list.hostconfig.push(containers[x].HostConfig);
+                            list.networksettings.push(containers[x].NetworkSettings);
+                            list.mounts.push(containers[x].Mounts);
                         }
                         break;
                 }
             }
-            callback(retour);
+            callback(list);
         });
     },
 }

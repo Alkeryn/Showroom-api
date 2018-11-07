@@ -57,100 +57,100 @@ module.exports = {
     logs: function(callback,path){
     },
     list: function(callback){ //callback tous les {nom,id,etc..} de tout les docker, peut prendre tous les arguments callback doit être le premier argument
-        what=arguments
+        let what=arguments
         delete what[0]
         docker.listContainers({all: true}, function(err, containers) {
             var tmp;
-            var compose = {};
+            var list = {};
             for(x in containers){
                 tmp = containers[x].Labels["com.docker.compose.project"]
                 if(typeof tmp !== "undefined"){
-                    if(typeof compose[tmp] === "undefined"){
-                        compose[tmp] = {}
+                    if(typeof list[tmp] === "undefined"){
+                        list[tmp] = {}
                     }
                     for(a in what){
                         switch(what[a]){
                             case "id":
-                                if(typeof compose[tmp].id === "undefined"){
-                                    compose[tmp].id = [];
+                                if(typeof list[tmp].id === "undefined"){
+                                    list[tmp].id = [];
                                 }
-                                compose[tmp].id.push(containers[x].Id);
+                                list[tmp].id.push(containers[x].Id);
                                 break;
                             case "names":
-                                if(typeof compose[tmp].names === "undefined"){
-                                    compose[tmp].names = [];
+                                if(typeof list[tmp].names === "undefined"){
+                                    list[tmp].names = [];
                                 }
-                                compose[tmp].names.push(containers[x].Names[0]);
+                                list[tmp].names.push(containers[x].Names[0]);
                                 break;
                             case "image":
-                                if(typeof compose[tmp].image === "undefined"){
-                                    compose[tmp].image = [];
+                                if(typeof list[tmp].image === "undefined"){
+                                    list[tmp].image = [];
                                 }
-                                compose[tmp].image.push(containers[x].Image);
+                                list[tmp].image.push(containers[x].Image);
                                 break;
                             case "imageid":
-                                if(typeof compose[tmp].imageid === "undefined"){
-                                    compose[tmp].imageid = [];
+                                if(typeof list[tmp].imageid === "undefined"){
+                                    list[tmp].imageid = [];
                                 }
-                                compose[tmp].imageid.push(containers[x].ImageID);
+                                list[tmp].imageid.push(containers[x].ImageID);
                                 break; //verified to there
                             case "command":
-                                if(typeof compose[tmp].command === "undefined"){
-                                    compose[tmp].command = [];
+                                if(typeof list[tmp].command === "undefined"){
+                                    list[tmp].command = [];
                                 }
-                                compose[tmp].command.push(containers[x].Command);
+                                list[tmp].command.push(containers[x].Command);
                                 break;
                             case "created":
-                                if(typeof compose[tmp].created === "undefined"){
-                                    compose[tmp].created = [];
+                                if(typeof list[tmp].created === "undefined"){
+                                    list[tmp].created = [];
                                 }
-                                compose[tmp].created.push(containers[x].Created);
+                                list[tmp].created.push(containers[x].Created);
                                 break;
                             case "ports":
-                                if(typeof compose[tmp].ports === "undefined"){
-                                    compose[tmp].ports = [];
+                                if(typeof list[tmp].ports === "undefined"){
+                                    list[tmp].ports = [];
                                 }
-                                compose[tmp].ports.push(containers[x].Ports[0]);
+                                list[tmp].ports.push(containers[x].Ports[0]);
                                 break;
                             case "labels":
-                                if(typeof compose[tmp].labels === "undefined"){
-                                    compose[tmp].labels = [];
+                                if(typeof list[tmp].labels === "undefined"){
+                                    list[tmp].labels = [];
                                 }
-                                compose[tmp].labels.push(containers[x].Labels);
+                                list[tmp].labels.push(containers[x].Labels);
                                 break;
                             case "state":
-                                if(typeof compose[tmp].state === "undefined"){
-                                    compose[tmp].state = [];
+                                if(typeof list[tmp].state === "undefined"){
+                                    list[tmp].state = [];
                                 }
-                                compose[tmp].state.push(containers[x].State);
+                                list[tmp].state.push(containers[x].State);
                                 break;
                             case "status":
-                                if(typeof compose[tmp].status === "undefined"){
-                                    compose[tmp].status = [];
+                                if(typeof list[tmp].status === "undefined"){
+                                    list[tmp].status = [];
                                 }
-                                compose[tmp].status.push(containers[x].Status);
+                                list[tmp].status.push(containers[x].Status);
                                 break;
                             case "hostconfig":
-                                if(typeof compose[tmp].hostconfig === "undefined"){
-                                    compose[tmp].hostconfig = [];
+                                if(typeof list[tmp].hostconfig === "undefined"){
+                                    list[tmp].hostconfig = [];
                                 }
-                                compose[tmp].hostconfig.push(containers[x].HostConfig);
+                                list[tmp].hostconfig.push(containers[x].HostConfig);
                                 break;
                             case "networksettings":
-                                if(typeof compose[tmp].networksettings === "undefined"){
-                                    compose[tmp].networksettings = [];
+                                if(typeof list[tmp].networksettings === "undefined"){
+                                    list[tmp].networksettings = [];
                                 }
-                                compose[tmp].networksettings.push(containers[x].NetworkSettings);
+                                list[tmp].networksettings.push(containers[x].NetworkSettings);
                                 break;
                             case "mounts":
-                                if(typeof compose[tmp].mounts === "undefined"){
-                                    compose[tmp].mounts = [];
+                                if(typeof list[tmp].mounts === "undefined"){
+                                    list[tmp].mounts = [];
                                 }
-                                compose[tmp].mounts.push(containers[x].Mounts);
+                                list[tmp].mounts.push(containers[x].Mounts);
                                 break;
                             case "*":
-                                if(typeof compose[tmp].id === "undefined"){
-                                    compose[tmp] = {
+                                if(typeof list[tmp].id === "undefined"){
+                                    list[tmp] = {
                                         "id":[],
                                         "names":[],
                                         "image":[],
@@ -166,24 +166,24 @@ module.exports = {
                                         "mounts":[],
                                     }
                                 }
-                                compose[tmp].id.push(containers[x].Id);
-                                compose[tmp].names.push(containers[x].Names[0]);
-                                compose[tmp].image.push(containers[x].Image);
-                                compose[tmp].imageid.push(containers[x].ImageID);
-                                compose[tmp].command.push(containers[x].Command);
-                                compose[tmp].created.push(containers[x].Created);
-                                compose[tmp].ports.push(containers[x].Ports[0]);
-                                compose[tmp].labels.push(containers[x].Labels);
-                                compose[tmp].state.push(containers[x].State);
-                                compose[tmp].status.push(containers[x].Status);
-                                compose[tmp].hostconfig.push(containers[x].HostConfig);
-                                compose[tmp].networksettings.push(containers[x].NetworkSettings);
-                                compose[tmp].mounts.push(containers[x].Mounts);
+                                list[tmp].id.push(containers[x].Id);
+                                list[tmp].names.push(containers[x].Names[0]);
+                                list[tmp].image.push(containers[x].Image);
+                                list[tmp].imageid.push(containers[x].ImageID);
+                                list[tmp].command.push(containers[x].Command);
+                                list[tmp].created.push(containers[x].Created);
+                                list[tmp].ports.push(containers[x].Ports[0]);
+                                list[tmp].labels.push(containers[x].Labels);
+                                list[tmp].state.push(containers[x].State);
+                                list[tmp].status.push(containers[x].Status);
+                                list[tmp].hostconfig.push(containers[x].HostConfig);
+                                list[tmp].networksettings.push(containers[x].NetworkSettings);
+                                list[tmp].mounts.push(containers[x].Mounts);
                         }
                     }
                 }
             }
-            callback(compose);
+            callback(list);
         });
     },
 }
