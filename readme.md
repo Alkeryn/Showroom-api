@@ -1,20 +1,26 @@
 # Showroom is a webUI to manage and launch docker images
-To launch the software run :
+To launch the software you need node **v10.10** at least and npm installed then run :
 
 ```bash
 npm install
 npm install -g pm2 #Probably need sudo depending of your configuration
 
 #Then
+#for developpement :
+
+npm start
+
+#Fore production :
 
 pm2 start server.js
 
 #Or
+
 pm2 start -- npm
 
 # Those 2 commands are equivalent
 ```
-And go to `localhost:8080` in your web browser
+And go to http://localhost:8080 in your web browser
 
 you can use only `npm start` to test it, but use `pm2` for production
 
