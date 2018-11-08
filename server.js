@@ -31,12 +31,12 @@ app.use(session({secret: 'Scrt'}))
 
 // WEBUI
     .use(function(req, res, next) {
-        if(fs.existsSync(__dirname+'/html'+req.originalUrl+'.ejs')){
-            res.render(req.originalUrl.substring(1)+'.ejs');
-        }
-        else{
-            next();
-        }
+	if(fs.existsSync(__dirname+'/html'+req.originalUrl+'.ejs')){
+	    res.render(req.originalUrl.substring(1)+'.ejs');
+	}
+	else{
+	    next();
+	}
     })
 // GET API
     .get('/api/:type', function(req, res, next) {
