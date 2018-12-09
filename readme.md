@@ -33,7 +33,6 @@ curl -X POST -d "id=THEID" http://localhost:8080/api/containers/stop
 
 You can see the list of active container at localhost:8080/api/containers
 or fetch the json with curl
-
 # File Hierarchy
 
 * #### You must put all your html files in `/html/name.ejs`, yes you do need to use the `ejs` extension, look at `/html` to have an example or ask me questions
@@ -89,7 +88,7 @@ Path| Description
 Path| Description | Takes | example | Should returns
 :-:|:-:|:-:|:-:|:-:
 /api/containers/run | create and run a containers | image | `curl -d "image=debian:latest" -X POST "localhost:8080/api/containers/run"`| "started"
-/api/apps/import| import a .yml or tar and give it a name & description + list of authorized users and members etc ...
+/api/apps/import| import a .yml or tar and give it a name & description + list of authorized users and members etc ... | tar | curl -X POST -F "tar=@path" http://localhost:8080/api/apps/import
 /api/apps/export| export a .yml or tar
 /api/apps/remove| remove an apps
 

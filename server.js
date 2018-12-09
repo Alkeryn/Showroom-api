@@ -1,8 +1,9 @@
 noop = function(){};
 
-const sql = require("./modules/postgres.js"),
-    docker = require("./modules/docker.js"),
-    compose = require("./modules/compose.js");
+const   apps = require("./modules/apps.js"),
+    compose = require("./modules/compose.js"),
+    docker = require("./modules/docker.js");
+    // sql = require("./modules/data.js");
 
 const express = require('express'),
     app = express(),
@@ -11,13 +12,17 @@ const express = require('express'),
     io = require('socket.io').listen(server),
     ent = require('ent'),
     session = require('cookie-session'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    multer = require('multer'),
+    upload = multer({dest: 'tmp/uploads/'});
 
 
 // docker.list(console.log,'id','names','ports','state');
 // docker.list(console.log,'*');
-compose.list(console.log,'names','id');
+// compose.list(console.log,'names','id');
 // compose.up(console.log,"medialog");
+
+// apps.import(console.log,"haha");
 
 io.sockets.on('connection', function (socket) {
     socket.emit('message', 'Sucessfully connected');
@@ -178,6 +183,11 @@ app.use(session({secret: 'Scrt'}))
 	    case 'apps':
 		switch (req.params.action) {
 		    case 'import':
+			upload.single('tar')(req,res, (err) => {
+			    apps.import((id) => {
+				res.send(id);
+			    },req.file.filename);
+			});
 			break;
 		    default:
 			next();
