@@ -9,24 +9,22 @@ const root=process.cwd(),
 
 function flat(path){
     loop:
-    do{
-	var dir=[];
+    for(;;){
 	var no=0;
 	var files=fs.readdirSync(path,{withFileTypes : true})
 	for(x in files){
-	    if(files[x].isDirectory()){
-		dir.push(files[x].name)
-	    }
 	    no++;
 	    if(no==2){
 		break loop;
 	    }
 	}
-	if(dir.length == 1 && no == 1){
-	    path+='/'+dir[0];
+	if(files[0].isDirectory()){
+	    path+='/'+files[0].name;
+	}
+	else{
+	    break loop;
 	}
     }
-    while(dir.length == 1 && no == 1);
     // console.log(path);
     return path;
 }
