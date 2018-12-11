@@ -69,12 +69,12 @@ app.use(session({secret: 'Scrt'}))
 		switch (req.params.action) {
 		    case 'start':
 			docker.start(function (data){
-			    res.send('started');
+			    res.send('done');
 			},req.body.id)
 			break;
 		    case 'stop':
 			docker.stop(function (data){
-			    res.send('stoped');
+			    res.send('done');
 			},req.body.id)
 			break;
 		    case 'state':
@@ -120,10 +120,10 @@ app.use(session({secret: 'Scrt'}))
 				    res.send("Error")
 				}
 				else{
-				    res.send("started")
+				    res.send("done")
 				}
-			    },req.body.name);
-			},req.body.name);
+			    },req.body.id);
+			},req.body.id);
 
 			break;
 		    case 'down':
@@ -134,7 +134,7 @@ app.use(session({secret: 'Scrt'}))
 			    else{
 				res.send("done");
 			    }
-			},req.body.name)
+			},req.body.id)
 			break;
 		    case 'start':
 			compose.start(function(stdout,stderr,err){
@@ -142,9 +142,9 @@ app.use(session({secret: 'Scrt'}))
 				res.send("Error")
 			    }
 			    else{
-				res.send("started");
+				res.send("done");
 			    }
-			},req.body.name)
+			},req.body.id)
 			break;
 		    case 'stop':
 			compose.stop(function(stdout,stderr,err){
@@ -152,9 +152,9 @@ app.use(session({secret: 'Scrt'}))
 				res.send("Error")
 			    }
 			    else{
-				res.send("stoped");
+				res.send("done");
 			    }
-			},req.body.name)
+			},req.body.id)
 			break;
 		    case 'create':
 			compose.create(function(stdout,stderr,err){
@@ -164,7 +164,7 @@ app.use(session({secret: 'Scrt'}))
 			    else{
 				res.send("done");
 			    }
-			},req.body.name)
+			},req.body.id)
 			break;
 		    case 'rm':
 			compose.rm(function(stdout,stderr,err){
@@ -174,7 +174,7 @@ app.use(session({secret: 'Scrt'}))
 			    else{
 				res.send("done");
 			    }
-			},req.body.name)
+			},req.body.id)
 			break;
 		    default:
 			next();

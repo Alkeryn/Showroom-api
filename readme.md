@@ -62,17 +62,18 @@ Path | Description
 ## POST API :
 Path| Description | Takes | example | Should returns
 :-:|:-:|:-:|:-:|:-:
-/api/containers/stop | Stop a containers | id | curl -d "id=f9bd3802cb4182" -X POST http://localhost:8080/api/containers/stop | "stoped"
-/api/containers/start | Stop a containers | id | curl -d "id=f9bd3802cb4182" -X POST http://localhost:8080/api/containers/start| "started"
+/api/containers/stop | Stop a containers | id | curl -d "id=f9bd3802cb4182" -X POST http://localhost:8080/api/containers/stop | "done"
+/api/containers/start | Stop a containers | id | curl -d "id=f9bd3802cb4182" -X POST http://localhost:8080/api/containers/start| "done"
 /api/containers/state | return the state of a container| id | curl -d "id=f9bd3802cb4182" -X POST http://localhost:8080/api/containers/state| state {running, created ...}
 /api/containers/remove | remove a containers | id | curl -d "id=f9bd3802cb4182" -X POST http://localhost:8080/api/remove| "done"
 /api/containers/create | create a containers (name is optional) | image | curl -d "image=debian:latest&name=thename" -X POST http://localhost:8080/api/containers/create| ID or error msg
 /api/containers/pull | pull an image | image | curl -d "image=debian:latest" -X POST http://localhost:8080/api/containers/pull| "done"
-/api/compose/up| create ad start a compose |name|curl -X POST -d "name=medialog" http://localhost:8080/api/compose/up|"started"
-/api/compose/down| stop ad rm a compose |name|curl -X POST -d "name=medialog" http://localhost:8080/api/compose/down|"done"
-/api/compose/start| start a compose |name|curl -X POST -d "name=medialog" http://localhost:8080/api/compose/start|"started"
-/api/compose/stop| stop a compose |name|curl -X POST -d "name=medialog" http://localhost:8080/api/compose/stop|"stoped"
-/api/compose/create| create |image|curl -X POST -d "name=medialog" http://localhost:8080/api/compose/create|"done"
+/api/compose/up| create ad start a compose |id|curl -X POST -d "id=medialog" http://localhost:8080/api/compose/up|"done"
+/api/compose/down| stop ad rm a compose |id|curl -X POST -d "id=medialog" http://localhost:8080/api/compose/down|"done"
+/api/compose/start| start a compose |id|curl -X POST -d "id=medialog" http://localhost:8080/api/compose/start|"done"
+/api/compose/stop| stop a compose |id|curl -X POST -d "id=medialog" http://localhost:8080/api/compose/stop|"done"
+/api/compose/create| create |id|curl -X POST -d "id=medialog" http://localhost:8080/api/compose/create|"done"
+/api/apps/import| import a .yml or tar and give it a name & description + list of authorized users and members etc ... | tar | curl -X POST -F "tar=@path" http://localhost:8080/api/apps/import
 
 # Todo API Documentation :
 
@@ -87,8 +88,7 @@ Path| Description
 
 Path| Description | Takes | example | Should returns
 :-:|:-:|:-:|:-:|:-:
-/api/containers/run | create and run a containers | image | `curl -d "image=debian:latest" -X POST "localhost:8080/api/containers/run"`| "started"
-/api/apps/import| import a .yml or tar and give it a name & description + list of authorized users and members etc ... | tar | curl -X POST -F "tar=@path" http://localhost:8080/api/apps/import
+/api/containers/run | create and run a containers | image | `curl -d "image=debian:latest" -X POST "localhost:8080/api/containers/run"`| "done"
 /api/apps/export| export a .yml or tar
 /api/apps/remove| remove an apps
 

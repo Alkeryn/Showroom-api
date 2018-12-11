@@ -8,7 +8,7 @@ function turn(value,id)
     switch(value){
         case 'on':
             $.post('api/containers/start',{id: id},function(data,status,xhr){
-                if( data == "started" ){
+                if( data == "done" ){
                     getstate(function (state){
                         $("#"+id).children(".state").text(state)
                     },id);
@@ -17,7 +17,7 @@ function turn(value,id)
             break;
         case 'off':
             $.post('api/containers/stop',{id: id},function(data,status,xhr){
-                if( data == "stoped" ){
+                if( data == "done" ){
                     getstate(function (state){
                         $("#"+id).children(".state").text(state)
                     },id);
