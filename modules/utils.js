@@ -9,4 +9,11 @@ module.exports = {
 	}
 	return b;
     },
+    delStr: function(string,del){
+	while(string.includes(del)){
+	    string=string.split(del);
+	    string=string.join('');
+	}
+	return string;
+    },
 }
