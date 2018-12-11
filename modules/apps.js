@@ -66,32 +66,42 @@ function sanitizepath(bind,path){
 function yamlparse(doc,path){
     if(doc.version != 3){
 	throw(`File version must be '3' check docker-compose documentation, your version is ${doc.version}`);
+    }else if(doc.services === undefined){
+	throw("\"services\" key must be defined, you aren't really using a v3 yml right ? go read the doc");
     }
-    for(x in doc.services){
-	delete doc.services[x]["container_name"];
-	// dynamic ports, STILL need to fix the V3 port object
-	for(y in doc.services[x].ports){
-	    let obj=doc.services[x].ports[y];
-	    let index=obj.lastIndexOf(":")+1;
+    function ports(obj){
+	for(y in obj.ports){
+	    let obje=obj.ports[y];
+	    let index=obje.lastIndexOf(":")+1;
 	    if(index > -1 ){
-		doc.services[x].ports[y]=obj.substring(index);
+		obj.ports[y]=obje.substring(index);
 	    }
 	}
-	//fix volumes ../, / and \/still need to fix the new V3 volume object
-	for(y in doc.services[x].volumes){
-	    let obj=doc.services[x].volumes[y];
-	    if(typeof obj === 'object' && obj !== null){
-		obj.source=sanitizepath(obj.source,path);
+    }
+    function volumes(obj){
+	for(y in obj.volumes){
+	    let obje=obj.volumes[y];
+	    if(typeof obje === 'object' && obje !== null){
+		obje.source=sanitizepath(obje.source,path);
 	    }
-	    else if(obj !== null){
-		let split=obj.split(':');
+	    else if(obje !== null){
+		let split=obje.split(':');
 		if(split.length > 1){
 		    split[0]=sanitizepath(split[0],path);
-		    doc.services[x].volumes[y]=split.join(":");
+		    obj.volumes[y]=split.join(":");
 		}
 	    }
 	}
     }
+    for(x in doc.services){
+	delete doc.services[x]["container_name"];
+	// dynamic ports
+	ports(doc.services[x])
+	// fix volumes vuln
+	volumes(doc.services[x])
+    }
+    ports(doc);
+    volumes(doc);
 }
 function parse(path){
     var filename='docker-compose.yml'
@@ -101,6 +111,7 @@ function parse(path){
 		try {
 		    var doc = yaml.safeLoad(fs.readFileSync(path+filename, 'utf8'));
 		    yamlparse(doc,path);
+		    // console.log(yaml.safeDump(doc))
 		    fs.writeFile(path+filename,yaml.safeDump(doc),err => {
 			if(err) throw(err);
 			resolve(exist);
