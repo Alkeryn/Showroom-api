@@ -3,7 +3,7 @@ const docker = new Docker({socketPath: '/var/run/docker.sock'});
 module.exports = {
     pull: function(callback,image){
 	docker.pull(image, function (err, stream) {
-	    callback(err,stream);
+	    callback(err);
 	});
     },
     create: function(callback,image,name){
@@ -15,34 +15,45 @@ module.exports = {
     },
     run: function(callback,image){
 	docker.run(image, ['bash', '-c', 'ls -al /'], process.stdout, function (err, data, container) {
-	    callback(data.StatusCode);
+	    callback(err,data.StatusCode);
 	});
 
     },
     remove: function(callback,containerid){
 	var container = docker.getContainer(containerid);
 	container.remove(function (err, data) {
-	    callback(data);
+	    callback(err,data);
 	});
 
     },
     stop: function(callback,containerid){
 	var container = docker.getContainer(containerid);
 	container.stop(function (err, data) {
-	    callback(data);
+	    callback(err,data);
 	});
 
     },
     start: function(callback,containerid){
 	var container = docker.getContainer(containerid);
 	container.start(function (err, data) {
-	    callback(data);
+	    callback(err,data);
 	});
     },
     inspect: function(callback,containerid){
 	var container = docker.getContainer(containerid);
 	container.inspect( function(err,data) {
-	    callback(data)
+	    callback(err,data)
+	});
+    },
+    state: function(callback,containerid){
+	var container = docker.getContainer(containerid);
+	container.inspect( function(err,data) {
+	    if(err){
+		callback(err);
+	    }
+	    else{
+		callback(false,data.State.Status)
+	    }
 	});
     },
     list: function(callback){ //callback tous les {nom,id,etc..} de tout les docker, peut prendre tous les arguments callback doit être le premier argument
@@ -171,7 +182,7 @@ module.exports = {
 			break;
 		}
 	    }
-	    callback(list);
+	    callback(err,list);
 	});
     },
 }

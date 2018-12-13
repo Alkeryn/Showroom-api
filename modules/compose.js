@@ -1,4 +1,4 @@
-const root=process.cwd()
+const root=process.cwd();
 
 const compose=root+'/compose/';
 const child=require("child_process"), //No API nor socket, gonna have to use bash scripts for this one
@@ -20,7 +20,12 @@ function exec(callback,command,path){
 	path = '';
     }
     child.exec(command,{shell : "/bin/bash",cwd : compose+path},(err,stdout,stderr) => {
-	callback(stdout,stderr,err);
+	if(err){
+	    callback(err,stdout,stderr);
+	}
+	else{
+	    callback();
+	}
     });
 }
 function execFile(callback,path){
@@ -28,30 +33,33 @@ function execFile(callback,path){
 	path = '';
     }
     child.execFile(root+path,{cwd : compose},(err,stdout,stderr) => {
-	callback(stdout,stderr,err);
+	callback(err,stdout,stderr);
     });
 }
-// exec((stdout,stderr) => {console.log(stdout,stderr)},"ls /{tmp,tmpa}")
-// exec((stdout,stderr) => {console.log(stdout,stderr)},"ls .")
+// exec((stdout,stderr) => {console.log(stdout,stderr)},"ls /{tmp,tmpa}");
+// exec((stdout,stderr) => {console.log(stdout,stderr)},"ls .");
 
 module.exports = {
     down: function(callback,path){
-	exec((stdout,stderr,err) => {callback(stdout,stderr,err)},"docker-compose down &",path)
+	exec((err,stdout,stderr) => {callback(err,false,stderr)},"docker-compose down",path);
+    },
+    up: function(callback,path){
+	exec((err,stdout,stderr) => {callback(err,false,stderr)},"docker-compose up -d",path) //might make it a spawn or fork
     },
     _up: function(callback,path){
-	exec((stdout,stderr,err) => {callback(stdout,stderr,err)},"docker-compose up &",path) //might make it a spawn or fork
+	exec((err,stdout,stderr) => {callback(err,false,stderr)},"docker-compose up",path) //might make it a spawn or fork
     },
     create: function(callback,path){
-	exec((stdout,stderr,err) => {callback(stdout,stderr,err)},"docker-compose up --no-start &",path) // docker-compose start is deprecated
+	exec((err,stdout,stderr) => {callback(err,false,stderr)},"docker-compose up --no-start",path) // docker-compose start is deprecated
     },
     rm: function(callback,path){
-	exec((stdout,stderr,err) => {callback(stdout,stderr,err)},"docker-compose rm &",path)
+	exec((err,stdout,stderr) => {callback(err,false,stderr)},"docker-compose rm",path);
     },
     start: function(callback,path){
-	exec((stdout,stderr,err) => {callback(stdout,stderr,err)},"docker-compose start &",path)
+	exec((err,stdout,stderr) => {callback(err,false,stderr)},"docker-compose start",path);
     },
     stop: function(callback,path){
-	exec((stdout,stderr,err) => {callback(stdout,stderr,err)},"docker-compose stop &",path)
+	exec((err,stdout,stderr) => {callback(err,false,stderr)},"docker-compose stop",path);
     },
     kill: function(callback,path){
     },
@@ -193,14 +201,14 @@ module.exports = {
 		if(err) return console.error(err);
 		for(x in files){
 		    if(files[x].isDirectory()){
-			dir.push(files[x].name)
+			dir.push(files[x].name);
 		    }
 		}
 		let diff=utils.xorAr(all,dir);
 		for(x in diff){
 		    list[diff[x]] = "down";
 		}
-		callback(list);
+		callback(err,list);
 	    });
 	});
     },

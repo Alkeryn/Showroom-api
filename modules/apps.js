@@ -42,26 +42,8 @@ function mv(callback,path,id){
 	saveid=crypto.randomBytes(16).toString('hex');
     }while(fs.existsSync(compose+saveid))
     fs.move(path, compose+saveid, err => {
-	if (err) return console.error(err);
-	clean(id).then(callback(saveid));
+	clean(id).then(callback(err,saveid));
     })
-}
-function sanitizepath(bind,path){
-    bind=utils.delStr(bind,'..');   // ..
-    bind=utils.delStr(bind,'\\\/'); // \/
-    bind=utils.delStr(bind,'\\\\'); // \\
-    bind=utils.delStr(bind,'\/\/'); // //
-    bind=utils.delStr(bind,'.\/');  // ./
-
-    if(bind.startsWith("/")){
-	bind=bind.substring(1);
-    }
-    // console.log(path+bind)
-    if(fs.existsSync(path+bind)){
-	if(fs.lstatSync(path+bind).isSymbolicLink()) throw ("Oh no you aren't (binding a volume to a symlink is forbidden since i don't trust you)");
-    }
-    bind='./'+bind
-    return bind
 }
 function yamlparse(doc,path){
     if(doc.version != 3){
@@ -82,12 +64,12 @@ function yamlparse(doc,path){
 	for(y in obj.volumes){
 	    let obje=obj.volumes[y];
 	    if(typeof obje === 'object' && obje !== null){
-		obje.source=sanitizepath(obje.source,path);
+		obje.source=utils.sanitizepath(obje.source,path);
 	    }
 	    else if(obje !== null){
 		let split=obje.split(':');
 		if(split.length > 1){
-		    split[0]=sanitizepath(split[0],path);
+		    split[0]=utils.sanitizepath(split[0],path);
 		    obj.volumes[y]=split.join(":");
 		}
 	    }
@@ -138,11 +120,11 @@ module.exports = {
 		callback(err);
 	    } else {
 		var path = flat(tmp+id);
-		parse(path).then((resolve) => {
+		parse(path).then(() => {
 		    mv(callback,path,id);
 		}).catch(reason => {
 		    clean(id);
-		    callback(reason);
+		    callback(false,false,reason);
 		});
 	    }
 	});

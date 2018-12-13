@@ -1,8 +1,10 @@
-noop = function(){};
+noop = function(){}; //does nothing
 
 const   apps = require("./modules/apps.js"),
     compose = require("./modules/compose.js"),
-    docker = require("./modules/docker.js");
+    docker = require("./modules/docker.js"),
+    utils = require("./modules/utils.js");
+
 // sql = require("./modules/data.js");
 
 const express = require('express'),
@@ -17,6 +19,20 @@ const express = require('express'),
     upload = multer({dest: 'tmp/uploads/'});
 
 
+function treat(res,err,data,stderr){
+    if(stderr){
+	res.status(500).send(stderr);
+    }
+    else if(err){
+	res.status(500).send(err.message);
+    }
+    else if(data){
+	res.send(data);
+    }
+    else{
+	res.send("done");
+    }
+}
 // docker.list(console.log,'id','names','ports','state');
 // docker.list(console.log,'*');
 // compose.list(console.log,'names','id');
@@ -47,14 +63,12 @@ app.use(session({secret: 'Scrt'}))
     .get('/api/:type', function(req, res, next) {
 	switch (req.params.type) {
 	    case 'containers':
-		docker.list(function(data){
-		    res.send(data)},'names','id','image','ports','command','state','compose');
+		docker.list(function(err,data){
+		    res.send(data)},'names','id','image','ports','command','state','compose'); //crash if empty, to fix, can't reproduce issue
 		break;
 	    case 'compose':
-		compose.list(function(data){
+		compose.list(function(err,data){
 		    res.send(data)},'names','id','image','ports','command','state');
-		break;
-	    case 'apps':
 		break;
 	    default:
 		next();
@@ -63,135 +77,37 @@ app.use(session({secret: 'Scrt'}))
 
     })
 // POST API
-    .post('/api/:type/:action', function(req, res, next) {
-	switch (req.params.type) {
-	    case 'containers':
-		switch (req.params.action) {
-		    case 'start':
-			docker.start(function (data){
-			    res.send('done');
-			},req.body.id)
-			break;
-		    case 'stop':
-			docker.stop(function (data){
-			    res.send('done');
-			},req.body.id)
-			break;
-		    case 'state':
-			docker.inspect(function (data){
-			    res.send(data.State.Status)
-			},req.body.id)
-			break;
-		    case 'remove':
-			docker.remove(function (data){
-			    res.send('done');
-			},req.body.id)
-			break;
-		    case 'create':
-			docker.create(function (err,container){
-			    if(err){
-				res.send(err.message);
-			    }
-			    else{
-				res.send(container.id);
-			    }
-			},req.body.image,req.body.name)
-			break;
-		    case 'pull':
-			docker.pull(function (err,stream){
-			    if(err){
-				res.send(err.message);
-			    }
-			    else{
-				res.send("done");
-			    }
-			},req.body.image)
-			break;
-		    default:
-			next();
-		}
-		break;
-	    case 'compose':
-		switch (req.params.action) {
-		    case 'up':
-			compose.create((stdout,stderr,err) => {
-			    compose.start((stdout,stderr,err) => {
-				if(err){
-				    res.send("Error")
-				}
-				else{
-				    res.send("done")
-				}
-			    },req.body.id);
-			},req.body.id);
-
-			break;
-		    case 'down':
-			compose.down(function(stdout,stderr,err){
-			    if(err){
-				res.send("Error")
-			    }
-			    else{
-				res.send("done");
-			    }
-			},req.body.id)
-			break;
-		    case 'start':
-			compose.start(function(stdout,stderr,err){
-			    if(err){
-				res.send("Error")
-			    }
-			    else{
-				res.send("done");
-			    }
-			},req.body.id)
-			break;
-		    case 'stop':
-			compose.stop(function(stdout,stderr,err){
-			    if(err){
-				res.send("Error")
-			    }
-			    else{
-				res.send("done");
-			    }
-			},req.body.id)
-			break;
-		    case 'create':
-			compose.create(function(stdout,stderr,err){
-			    if(err){
-				res.send("Error")
-			    }
-			    else{
-				res.send("done");
-			    }
-			},req.body.id)
-			break;
-		    case 'rm':
-			compose.rm(function(stdout,stderr,err){
-			    if(err){
-				res.send("Error")
-			    }
-			    else{
-				res.send("done");
-			    }
-			},req.body.id)
-			break;
-		    default:
-			next();
-		}
-		break;
-	    case 'apps':
-		switch (req.params.action) {
-		    case 'import':
-			upload.single('tar')(req,res, (err) => {
-			    apps.import((id) => {
-				res.send(id);
-			    },req.file.filename);
-			});
-			break;
-		    default:
-			next();
-		}
+    .post('/api/:type/:action', (req,res,next) => {
+	let args=utils.objtoArr(req.body);
+	if(/containers|compose|apps/.test(req.params.type) && !/_up|list|import/.test(req.params.action)){
+	    let obj = req.params.type == "containers" ? docker : req.params.type == "compose" ? compose : apps;
+	    if(typeof obj[req.params.action] === 'function'){
+		args.unshift((err,data,stderr) => {
+		    treat(res,err,data,stderr)
+		});
+		obj[req.params.action].apply(this,args)
+	    }
+	    else{
+		next();
+	    }
+	}
+	else{
+	    next();
+	}
+    })
+    .post('/api/apps/:action',(req,res,next) => {
+	switch (req.params.action) {
+	    case 'import':
+		upload.single('tar')(req,res, (err) => {
+		    if(req.file != undefined){
+			apps.import((err,data,stderr) => {
+			    treat(res,err,data,stderr);
+			},req.file.filename);
+		    }
+		    else{
+			res.status(500).send("Wrong request, use tar=");
+		    };
+		});
 		break;
 	    default:
 		next();
