@@ -1,9 +1,9 @@
 const targz=require('targz'),
     crypto=require('crypto'),
     fs = require('fs-extra'),
-    utils=require("./utils");
-yaml = require('js-yaml');
-
+    yaml = require('js-yaml'),
+    utils=require("./utils"),
+    down=require("./compose.js").down;
 const root=process.cwd(),
     upload=root+'/tmp/uploads/',
     tmp=root+'/tmp/tmp/',
@@ -129,4 +129,29 @@ module.exports = {
 	    }
 	});
     },
+    remove: function(callback, id){
+	id=utils.sanitizepath(id).substring(2);
+	if(compose != compose+id ){
+	    fs.pathExists(compose+id,(err,exists) => {
+		if(exists){
+		    down(() =>{ //remove everything before
+			fs.remove(compose+id, err => {
+			    if (err) callback(err);
+			    callback();
+			})
+		    },id);
+		}
+		else if(err){
+		    console.log(err);
+		    callback(err);
+		}
+		else{
+		    callback(false,false,`No such compose exist : ${id}`);
+		}
+	    });
+	}
+	else{
+	    callback(false,false,"You sent empty id")
+	}
+    }
 }
