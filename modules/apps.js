@@ -13,15 +13,15 @@ function flat(path){
     loop:
     for(;;){
 	var no=0;
-	var files=fs.readdirSync(path,{withFileTypes : true})
+	var files=fs.readdirSync(path,{withFileTypes : true});
 	for(x in files){
-	    no++;
+	    if(!/^\._/.test(files[x].name)) no++; // ignore mac os files
 	    if(no==2){
 		break loop;
 	    }
 	}
-	if(files[0].isDirectory()){
-	    path+='/'+files[0].name;
+	if(files[x].isDirectory()){
+	    path+='/'+files[x].name;
 	}
 	else{
 	    break loop;
